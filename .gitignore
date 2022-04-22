@@ -2,6 +2,8 @@
 venv-miguel/
 temp/
 **/*~
+**/#*#
+**/.#*
 
 
 # Byte-compiled / optimized / DLL files

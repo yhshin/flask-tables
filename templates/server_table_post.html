@@ -4,6 +4,7 @@
   <table id="data" class="table table-striped">
     <thead>
       <tr>
+        <th>Id</th>
         <th>Name</th>
         <th>Age</th>
         <th>Address</th>
@@ -18,21 +19,25 @@
 
 {% block scripts %}
   <script>
-    $(document).ready(function () {
-      $('#data').DataTable({
-        ajax: {
-          url: '/api/data',
-          type: 'POST'
-        },
-        serverSide: true,
-        columns: [
-          {data: 'name'},
-          {data: 'age', visible: false},
-          {data: 'address', orderable: false},
-          {data: 'phone', orderable: false},
-          {data: 'email'}
-        ],
-      });
-    });
+   $(document).ready(function () {
+     $('#data').DataTable({
+       ajax: {
+         url: '/api/data',
+         type: 'POST'
+       },
+       serverSide: true,
+       columns: [
+         {data: 'id', visible: false},
+         {data: 'name'},
+         {data: 'age'},
+         {data: 'address', orderable: false},
+         {data: 'phone', orderable: false},
+         {data: 'email'}
+       ],
+       search: {
+         return: true
+       }
+     });
+   });
   </script>
 {% endblock %}
