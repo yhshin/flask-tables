@@ -4,6 +4,7 @@
   <table id="data" class="table table-striped">
     <thead>
       <tr>
+        <th></th>
         <th>Id</th>
         <th>Name</th>
         <th>Age</th>
@@ -27,6 +28,8 @@
        },
        serverSide: true,
        columns: [
+         {data: null, defaultContent: '',
+          orderable: false, className: 'select-checkbox'},
          {data: 'id', visible: false},
          {data: 'name'},
          {data: 'age'},
@@ -34,9 +37,14 @@
          {data: 'phone', orderable: false},
          {data: 'email'}
        ],
+       //columnDefs: [
+       //  {orderable: false, className: 'select-checkbox', targets: 0}
+       //],
        search: {
          return: true
-       }
+       },
+       select: {style: 'multi+shift', selector: 'td:first-child'},
+       order: [[ 1, 'asc' ]] 
      });
    });
   </script>
