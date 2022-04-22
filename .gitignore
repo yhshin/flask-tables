@@ -1,3 +1,9 @@
+# Added by YH
+venv-miguel/
+temp/
+**/*~
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
