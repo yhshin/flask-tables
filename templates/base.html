@@ -5,6 +5,60 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/select/1.3.4/css/select.dataTables.min.css">
+
+    <style>
+/*
+
+select styles for 
+
+ tbody && th.select-checkbox
+
+change tbody to thead
+*/
+
+
+table.dataTable thead th.select-checkbox {
+  position: relative;
+}
+
+table.dataTable thead th.select-checkbox:before,
+table.dataTable thead th.select-checkbox:after {
+  display: block;
+  position: absolute;
+  top: 1.2em;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  box-sizing: border-box;
+}
+
+table.dataTable thead th.select-checkbox:before {
+  content: " ";
+  margin-top: -6px;
+  margin-left: -6px;
+  border: 1px solid black;
+  border-radius: 3px;
+}
+
+/* added 'thead' before 'tr.selected' */
+table.dataTable thead tr.selected th.select-checkbox:after {
+  content: "✓";  /* \2713 */
+  font-size: 20px;
+  margin-top: -19px;
+  margin-left: -6px;
+  text-align: center;
+  text-shadow: 1px 1px #B0BED9, -1px -1px #B0BED9, 1px -1px #B0BED9, -1px 1px #B0BED9;
+}
+
+table.dataTable.compact thead th.select-checkbox:before {
+  margin-top: -12px;
+}
+
+table.dataTable.compact thead tr.selected th.select-checkbox:after {
+  margin-top: -16px;
+}
+
+    </style>
   </head>
   <body>
     <div class="container">

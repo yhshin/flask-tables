@@ -1,0 +1,52 @@
+/*
+ * This style is from 'select' extension styleseet for
+ *
+ *   'tobdy' and 'th.select-checkbox' 
+ *
+ * They were copied here and 'tbody' were (blindly) changed to 'thead'
+ *
+ *
+ * NOTE: This works when it is copied into a <style> section in HTML
+ *       BUT checkbox is not shown when included as a <link>.
+ */
+
+table.dataTable thead th.select-checkbox {
+  position: relative;
+}
+
+table.dataTable thead th.select-checkbox:before,
+table.dataTable thead th.select-checkbox:after {
+  display: block;
+  position: absolute;
+  top: 1.2em;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  box-sizing: border-box;
+}
+
+table.dataTable thead th.select-checkbox:before {
+  content: " ";
+  margin-top: -6px;
+  margin-left: -6px;
+  border: 1px solid black;
+  border-radius: 3px;
+}
+
+/* added 'thead' before 'tr.selected' */
+table.dataTable thead tr.selected th.select-checkbox:after {
+  content: "✓";  /* \2713 */
+  font-size: 20px;
+  margin-top: -19px;
+  margin-left: -6px;
+  text-align: center;
+  text-shadow: 1px 1px #B0BED9, -1px -1px #B0BED9, 1px -1px #B0BED9, -1px 1px #B0BED9;
+}
+
+table.dataTable.compact thead th.select-checkbox:before {
+  margin-top: -12px;
+}
+
+table.dataTable.compact thead tr.selected th.select-checkbox:after {
+  margin-top: -16px;
+}
