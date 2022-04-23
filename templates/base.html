@@ -7,57 +7,54 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/select/1.3.4/css/select.dataTables.min.css">
 
     <style>
-/*
+     table.dataTable thead th.select-checkbox {
+       position: relative;
+     }
 
-select styles for 
+     table.dataTable thead th.select-checkbox:before,
+     table.dataTable thead th.select-checkbox:after {
+       display: block;
+       position: absolute;
+       top: 1.2em;
+       left: 50%;
+       width: 12px;
+       height: 12px;
+       box-sizing: border-box;
+     }
 
- tbody && th.select-checkbox
+     table.dataTable thead th.select-checkbox:before {
+       content: " ";
+       margin-top: -6px;
+       margin-left: -6px;
+       border: 1px solid black;
+       border-radius: 3px;
+     }
 
-change tbody to thead
-*/
+     /* added 'thead' before 'tr.selected' */
+     table.dataTable thead tr.selected th.select-checkbox:after {
+       content: "✓";  /* \2713 */
+       font-size: 20px;
+       margin-top: -19px;
+       margin-left: -6px;
+       text-align: center;
+       text-shadow: 1px 1px #B0BED9, -1px -1px #B0BED9, 1px -1px #B0BED9, -1px 1px #B0BED9;
+     }
 
+     table.dataTable.compact thead th.select-checkbox:before {
+       margin-top: -12px;
+     }
 
-table.dataTable thead th.select-checkbox {
-  position: relative;
-}
+     table.dataTable.compact thead tr.selected th.select-checkbox:after {
+       margin-top: -16px;
+     }
+    </style>
 
-table.dataTable thead th.select-checkbox:before,
-table.dataTable thead th.select-checkbox:after {
-  display: block;
-  position: absolute;
-  top: 1.2em;
-  left: 50%;
-  width: 12px;
-  height: 12px;
-  box-sizing: border-box;
-}
-
-table.dataTable thead th.select-checkbox:before {
-  content: " ";
-  margin-top: -6px;
-  margin-left: -6px;
-  border: 1px solid black;
-  border-radius: 3px;
-}
-
-/* added 'thead' before 'tr.selected' */
-table.dataTable thead tr.selected th.select-checkbox:after {
-  content: "✓";  /* \2713 */
-  font-size: 20px;
-  margin-top: -19px;
-  margin-left: -6px;
-  text-align: center;
-  text-shadow: 1px 1px #B0BED9, -1px -1px #B0BED9, 1px -1px #B0BED9, -1px 1px #B0BED9;
-}
-
-table.dataTable.compact thead th.select-checkbox:before {
-  margin-top: -12px;
-}
-
-table.dataTable.compact thead tr.selected th.select-checkbox:after {
-  margin-top: -16px;
-}
-
+    <style>
+     tfoot input {
+       width: 100%;
+       padding: 3px;
+       box-sizing: border-box;
+    }
     </style>
   </head>
   <body>

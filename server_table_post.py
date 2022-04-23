@@ -46,6 +46,23 @@ def data():
             User.name.like(f'%{search}%'),
             User.email.like(f'%{search}%')
         ))
+    else:
+        # loop through 'columns[i][search][value]' keys
+        conditions = []
+        i = 0
+        while True:
+            if f'columns[{i}][data]' not in request.form:
+                break
+            # note: we used 'columns.data' to specify data source
+            col_name   = request.form.get(f'columns[{i}][data]')
+            col_search = request.form.get(f'columns[{i}][search][value]')
+            searchable = request.form.get(f'columns[{i}][searchable]')
+            if searchable and col_search:
+                conditions.append( getattr(User, col_name).like(f'%{col_search}%'))
+            i += 1
+        query = query.filter(db.and_(*conditions))
+        
+    #    request.form.get()
     total_filtered = query.count()
 
     # sorting
