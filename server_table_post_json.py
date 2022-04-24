@@ -68,12 +68,16 @@ def data():
             if searchable and col_search:  # just to make sure
                 conditions.append( getattr(User, col_name).like(f'%{col_search}%'))
         query = query.filter(db.and_(*conditions))
+
+    # TEST custom filters
+    if data['unread']:
+        query = query.filter(User.age < 30)
         
     #    request.form.get()
     total_filtered = query.count()
 
     # check 'load-unread' checkbox
-    print(request.form.keys())
+    #print(request.form.keys())
     
     # sorting
     orders = []
