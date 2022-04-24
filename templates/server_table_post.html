@@ -50,6 +50,12 @@
             '</tr>'+
             '</table>';
    }
+
+   //function collapseAll(e, dt, node, config ) {
+   //  dt.rows( ".details" ).api().each( function() {
+   //    $(this).click();
+   //  });
+   //}
    
    $(document).ready(function () {
      // Setup - add a text input to each footer cell
@@ -72,15 +78,64 @@
           orderable: false, searchable: false},
          {data: 'id', visible: false, searchable: false},
          {data: 'name'},
-         {data: 'age'},
+         {data: 'age', width: "20px"},
          {data: 'address', orderable: false},
-         {data: 'phone', orderable: false},
+         {data: 'phone', orderable: false, width: "100px"},
          {data: 'email'}
        ],
        search: {return: true},
        select: {style: 'multi+shift', selector: 'td:first-child'},
        order: [[ 1, 'asc' ]],  /** NOTE: match to ID of default column **/
 
+       dom: "Blfript",
+       buttons: [
+         {
+           tag: 'img',
+           //attr: { src: "{{ url_for('static', filename='north-arrow-235-32.png') }}" },
+           attr: { src: "{{ url_for('static', filename='double-arrow-up-14217-32.png') }}" },
+           className: 'customBtn',  // size, border, ...
+           titleAttr: 'Collapse all open rows',    // tooltip
+           action: function(e, dt, node, config) {
+             dt.rows( ".details" ).nodes().to$().click();
+           }
+         },
+         {
+           tag: 'img',
+           // Icon by <a href='https://iconpacks.net/?utm_source=link-attribution&utm_content=13197'>Iconpacks</a>
+           attr: { src: "{{ url_for('static', filename='checklist-13197-32.png') }}" },
+           className: 'customBtn customBtn-full',
+           titleAttr: 'Mark selected entries to read',
+           action: function(e, dt, node, config) {
+             alert('[Mark as Read] to be implemented');
+           }
+         },
+         {
+           tag: 'img',
+           attr: { src: "{{ url_for('static', filename='reset-14414-32.png') }}" },
+           className: 'customBtn',
+           titleAttr: 'Reload current page',
+           action: function(e, dt, node, config) {
+             //dt.ajax.reload();
+             dt.ajax.reload(null, false);  // keep current page number
+           }
+         },
+         {
+           // Example by 'kthorngren' at
+           //  http://live.datatables.net/kucakixo/14/edit
+           text: `<input type="checkbox" id="load-unread">Unread`,
+           action: function (e, dt, node, config) {
+             var target = $(e.target);
+             if (target.is("input[type=checkbox]")) {
+               if (target.prop('checked')) {
+                 this.text('<input type="checkbox" id="load-unread" checked>Unread')
+               } else {
+                 this.text('<input type="checkbox" id="load-unread">Unread')
+               }
+             }
+           }
+         }
+       ],
+       
        // for individual seach
        initComplete: function() {
          var api = this.api();
@@ -133,10 +188,14 @@
 
      //-- row details control ---
      // Add event listener for opening and closing details
+     //$('#data tbody').on('click', 'tr tr:not(:first-child)', function () {
      $('#data tbody').on('click', 'tr', function () {
        var tr = $(this);
        var row = table.row(tr);
-       
+
+       // note that data is already there to be used
+       // so that it is *not* necessary to qury agian.
+       // 
        if ( row.child.isShown() ) {
          // This row is already open - close it
          row.child.hide();

@@ -65,6 +65,9 @@ def data():
     #    request.form.get()
     total_filtered = query.count()
 
+    # check 'load-unread' checkbox
+    print(request.form.keys())
+    
     # sorting
     order = []
     i = 0
