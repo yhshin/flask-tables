@@ -67,16 +67,17 @@
      } );
      
      let table = $('#data').DataTable({
+       serverSide: true,
        ajax: {
          url: '/api/data',
          type: 'POST',
          data: function(data) {
            // read values from my custom search elements
-           data.unread = $('#load-unread').prop('checked');
+           data.unread = $('#load-message').val() == "unread";
            return JSON.stringify(data);
          }
        },
-       serverSide: true,
+       deferRender: true,
        columns: [
          {data: null, defaultContent: '',
           className: 'select-checkbox',
@@ -92,7 +93,7 @@
        select: {style: 'multi+shift', selector: 'td:first-child'},
        order: [[ 1, 'asc' ]],  /** NOTE: match to ID of default column **/
 
-       dom: "Blfript",
+       dom: '<"ctrl-bar"B<"unread">lfip>rt',
        buttons: [
          {
            tag: 'img',
@@ -120,24 +121,16 @@
            className: 'customBtn',
            titleAttr: 'Reload current page',
            action: function(e, dt, node, config) {
-             //dt.ajax.reload();
-             dt.ajax.reload(null, false);  // keep current page number
+             dt.ajax.reload();
+             //dt.ajax.reload(null, false);  // keep current page number
            }
          },
-         {
-           // Example by 'kthorngren' at
-           //  http://live.datatables.net/kucakixo/14/edit
-           text: `<input type="checkbox" id="load-unread">Unread`,
-           action: function (e, dt, node, config) {
-             var target = $(e.target);
-             if (target.is("input[type=checkbox]")) {
-               if (target.prop('checked')) {
-                 this.text('<input type="checkbox" id="load-unread" checked>Unread')
-               } else {
-                 this.text('<input type="checkbox" id="load-unread">Unread')
-               }
-             }
-           }
+         { /* just a placeholder for custom filter element */
+           text: "<select id='load-message'><option value='all'>Load Every</option><option value='unread'>Load Unread</option></select>",
+           titleAttr: 'Filter messages based on reading state',
+           //action: ** it is only for 'click' event so
+           //           real action will be defined later
+           //           for 'change' event **
          }
        ],
        
@@ -154,8 +147,12 @@
            });
          });
        }
-     });
+     });  // End of DT initialization
 
+     // Add select input to load All/Unread messages
+     //$("div.unread").html("<select id='load-message'><option value='all'>Load All</option><option value='unread'>Load Unread</option></select>");
+     //$(".ctrl-bar .dt-buttons").append("<select id='load-message'><option value='all'>Load All</option><option value='unread'>Load Unread</option></select>");
+     
      // Disable search on key up and implement enter
      $('#data_filter input').unbind();
      $('#data_filter input').bind('keyup', function(e) {
@@ -211,6 +208,12 @@
          row.child( format(row.data()) ).show();
          tr.addClass('details');
        }
+     } );
+
+     // Add listener for vcalue change event on 'load' select
+     $("#load-message").on("change", function() {
+       var that = $('#data').DataTable();
+       that.draw();
      } );
    } );
   </script>
