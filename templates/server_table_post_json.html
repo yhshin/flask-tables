@@ -65,6 +65,9 @@
          $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
        }
      } );
+
+     // Reduce number of page numbers shown in pagination
+     $.fn.DataTable.ext.pager.numbers_length = 4;
      
      let table = $('#data').DataTable({
        serverSide: true,
@@ -94,6 +97,16 @@
        order: [[ 1, 'asc' ]],  /** NOTE: match to ID of default column **/
 
        dom: '<"ctrl-bar"B<"unread">lfip>rt',
+       //pagingType: 'full_numbers',
+       pagingType: 'input',
+       language: {
+         paginate: {
+           first: '<img src="{{ url_for('static', filename='double-arrow-left-14215-32.png') }}">',
+           previous: '<img src="{{ url_for('static', filename='left-arrow-6404-32.png') }}">',
+           next: '<img src="{{ url_for('static', filename='right-arrow-6405-32.png') }}">',
+           last: '<img src="{{ url_for('static', filename='double-arrow-right-14214-32.png') }}">',
+         }
+       },
        buttons: [
          {
            tag: 'img',
