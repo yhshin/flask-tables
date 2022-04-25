@@ -149,10 +149,6 @@
        }
      });  // End of DT initialization
 
-     // Add select input to load All/Unread messages
-     //$("div.unread").html("<select id='load-message'><option value='all'>Load All</option><option value='unread'>Load Unread</option></select>");
-     //$(".ctrl-bar .dt-buttons").append("<select id='load-message'><option value='all'>Load All</option><option value='unread'>Load Unread</option></select>");
-     
      // Disable search on key up and implement enter
      $('#data_filter input').unbind();
      $('#data_filter input').bind('keyup', function(e) {
@@ -189,12 +185,18 @@
      });
 
      //-- row details control ---
-     // Add event listener for opening and closing details
-     //$('#data tbody').on('click', 'tr tr:not(:first-child)', function () {
-     $('#data tbody').on('click', 'tr', function () {
+     // Add event listener for opening and closing details.
+     // Skip if this is from 'select-checkbox'.
+     $('#data tbody').on('click', 'tr', function (e) {
+       var source = $(e.target);       // who triggered the event
+       if (source.hasClass('select-checkbox')) {
+         return;
+       }
+       
        var tr = $(this);
+       // Check if this is not from 'checkbox'
        var row = table.row(tr);
-
+       
        // note that data is already there to be used
        // so that it is *not* necessary to qury agian.
        // 
@@ -209,7 +211,7 @@
          tr.addClass('details');
        }
      } );
-
+     
      // Add listener for vcalue change event on 'load' select
      $("#load-message").on("change", function() {
        var that = $('#data').DataTable();
