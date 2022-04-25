@@ -101,10 +101,10 @@
        pagingType: 'input',
        language: {
          paginate: {
-           first: '<img src="{{ url_for('static', filename='double-arrow-left-14215-32.png') }}">',
-           previous: '<img src="{{ url_for('static', filename='left-arrow-6404-32.png') }}">',
-           next: '<img src="{{ url_for('static', filename='right-arrow-6405-32.png') }}">',
-           last: '<img src="{{ url_for('static', filename='double-arrow-right-14214-32.png') }}">',
+           first: '<img class="customBtn" src="{{ url_for('static', filename='double-arrow-left-14215-32.png') }}">',
+           previous: '<img class="customBtn" src="{{ url_for('static', filename='left-arrow-6404-32.png') }}">',
+           next: '<img class="customBtn" src="{{ url_for('static', filename='right-arrow-6405-32.png') }}">',
+           last: '<img class="customBtn" src="{{ url_for('static', filename='double-arrow-right-14214-32.png') }}">',
          }
        },
        buttons: [
@@ -139,7 +139,7 @@
            }
          },
          { /* just a placeholder for custom filter element */
-           text: "<select id='load-message'><option value='all'>Load Every</option><option value='unread'>Load Unread</option></select>",
+           text: "<select id='load-message'><option value='all'>All</option><option value='unread'>Unread</option></select>",
            titleAttr: 'Filter messages based on reading state',
            //action: ** it is only for 'click' event so
            //           real action will be defined later
