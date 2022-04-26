@@ -1,6 +1,7 @@
 import json
+from pprint import pprint
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify, make_response
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -107,6 +108,26 @@ def data():
         'recordsTotal': User.query.count(),
         'draw': data['draw']
     }
+
+
+@app.route('/make_older', methods=['GET', 'POST'])
+def make_older():
+    '''make users 1 year older
+
+    this is to test jQurty.ajax() from 'mark as read'
+    '''
+    if request.method == 'POST':
+        jdata = request.get_json()
+        entry_ids = sorted(jdata['selected'])
+        print(entry_ids)
+
+        # Good for returning successfully updated list
+        return jsonify([{'uid':uid} for uid in entry_ids])
+    else:
+        data = request.args.getlist('selected')
+        print(data)
+        return 'Feeling older', 200
+          
 
 
 if __name__ == '__main__':

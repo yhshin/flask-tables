@@ -1,235 +1,279 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <table id="data" class="display cell-border compact">
-    <thead>
-      <tr id="head-row">
-        <th class="select-checkbox" id="select_all"></th>
-        <th>Id</th>
-        <th>Name</th>
-        <th>Age</th>
-        <th>Address</th>
-        <th>Phone Number</th>
-        <th>Email</th>
-      </tr>
-    </thead>
-    <tbody>
-    </tbody>
-    <tfoot>
-      <tr>
-        <th class="unsearchable"></th>
-        <th class="unsearchable">Id</th>
-        <th>Name</th>
-        <th>Age</th>
-        <th>Address</th>
-        <th>Phone Number</th>
-        <th>Email</th>
-      </tr>
-    </tfoot>
-  </table>
+<table id="data" class="display cell-border compact">
+  <thead>
+    <tr id="head-row">
+      <th class="select-checkbox" id="select_all"></th>
+      <th>Id</th>
+      <th>Name</th>
+      <th>Age</th>
+      <th>Address</th>
+      <th>Phone Number</th>
+      <th>Email</th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+  <tfoot>
+    <tr>
+      <th class="unsearchable"></th>
+      <th class="unsearchable">Id</th>
+      <th>Name</th>
+      <th>Age</th>
+      <th>Address</th>
+      <th>Phone Number</th>
+      <th>Email</th>
+    </tr>
+  </tfoot>
+</table>
 {% endblock %}
 
 {% block scripts %}
-  <script>
-   /** < https://datatables.net/examples/api/row_details.html **/
-   /* Formatting function for row details - modify as you need */
-   function format ( d ) {
-     // `d` is the original data object for the row
-     return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
-            '<tr>'+
-            '<td>Name:</td>'+
-            '<td>'+d.name+'</td>'+
-            '</tr>'+
-            '<tr>'+
-            '<td>Age:</td>'+
-            '<td>'+d.age+'</td>'+
-            '</tr>'+
-            '<tr>'+
-            '<td>Extra info:</td>'+
-            '<td>And any further details here (images etc)...</td>'+
-            '</tr>'+
-            '</table>';
-   }
+<script>
+ /** < https://datatables.net/examples/api/row_details.html **/
+ /* Formatting function for row details - modify as you need */
+ function format ( d ) {
+   // `d` is the original data object for the row
+   return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+          '<tr>'+
+          '<td>Name:</td>'+
+          '<td>'+d.name+'</td>'+
+          '</tr>'+
+          '<tr>'+
+          '<td>Age:</td>'+
+          '<td>'+d.age+'</td>'+
+          '</tr>'+
+          '<tr>'+
+          '<td>Extra info:</td>'+
+          '<td>And any further details here (images etc)...</td>'+
+          '</tr>'+
+          '</table>';
+ }
 
-   //function collapseAll(e, dt, node, config ) {
-   //  dt.rows( ".details" ).api().each( function() {
-   //    $(this).click();
-   //  });
-   //}
-   
-   $(document).ready(function () {
-     // Setup - add a text input to each footer cell
-     $('#data tfoot th').each( function () {
-       if ($(this).attr('class') != 'unsearchable') {
-         var title = $(this).text();
-         $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
-       }
-     } );
-
-     // Reduce number of page numbers shown in pagination
-     $.fn.DataTable.ext.pager.numbers_length = 4;
-     
-     let table = $('#data').DataTable({
-       serverSide: true,
-       ajax: {
-         url: '/api/data',
-         type: 'POST',
-         data: function(data) {
-           // read values from my custom search elements
-           data.unread = $('#load-message').val() == "unread";
-           return JSON.stringify(data);
-         }
-       },
-       deferRender: true,
-       columns: [
-         {data: null, defaultContent: '',
-          className: 'select-checkbox',
-          orderable: false, searchable: false},
-         {data: 'id', visible: false, searchable: false},
-         {data: 'name'},
-         {data: 'age', width: "20px"},
-         {data: 'address', orderable: false},
-         {data: 'phone', orderable: false, width: "100px"},
-         {data: 'email'}
-       ],
-       search: {return: true},
-       select: {style: 'multi+shift', selector: 'td:first-child'},
-       order: [[ 1, 'asc' ]],  /** NOTE: match to ID of default column **/
-
-       dom: '<"ctrl-bar"B<"unread">lfip>rt',
-       //pagingType: 'full_numbers',
-       pagingType: 'input',
-       language: {
-         paginate: {
-           first: '<img class="customBtn" src="{{ url_for('static', filename='double-arrow-left-14215-32.png') }}">',
-           previous: '<img class="customBtn" src="{{ url_for('static', filename='left-arrow-6404-32.png') }}">',
-           next: '<img class="customBtn" src="{{ url_for('static', filename='right-arrow-6405-32.png') }}">',
-           last: '<img class="customBtn" src="{{ url_for('static', filename='double-arrow-right-14214-32.png') }}">',
-         }
-       },
-       buttons: [
-         {
-           tag: 'img',
-           //attr: { src: "{{ url_for('static', filename='north-arrow-235-32.png') }}" },
-           attr: { src: "{{ url_for('static', filename='double-arrow-up-14217-32.png') }}" },
-           className: 'customBtn',  // size, border, ...
-           titleAttr: 'Collapse all open rows',    // tooltip
-           action: function(e, dt, node, config) {
-             dt.rows( ".details" ).nodes().to$().click();
-           }
-         },
-         {
-           tag: 'img',
-           // Icon by <a href='https://iconpacks.net/?utm_source=link-attribution&utm_content=13197'>Iconpacks</a>
-           attr: { src: "{{ url_for('static', filename='checklist-13197-32.png') }}" },
-           className: 'customBtn customBtn-full',
-           titleAttr: 'Mark selected entries to read',
-           action: function(e, dt, node, config) {
-             alert('[Mark as Read] to be implemented');
-           }
-         },
-         {
-           tag: 'img',
-           attr: { src: "{{ url_for('static', filename='reset-14414-32.png') }}" },
-           className: 'customBtn',
-           titleAttr: 'Reload current page',
-           action: function(e, dt, node, config) {
-             dt.ajax.reload();
-             //dt.ajax.reload(null, false);  // keep current page number
-           }
-         },
-         { /* just a placeholder for custom filter element */
-           text: "<select id='load-message'><option value='all'>All</option><option value='unread'>Unread</option></select>",
-           titleAttr: 'Filter messages based on reading state',
-           //action: ** it is only for 'click' event so
-           //           real action will be defined later
-           //           for 'change' event **
-         }
-       ],
-       
-       // for individual seach
-       initComplete: function() {
-         var api = this.api();
-         api.columns().every(function() {
-           var that = this;
-           $('input', this.footer()).on('keyup change', function(e) {
-             if (that.search() !== this.value) {
-               that.search(this.value);
-             }
-             if (e.keyCode == 13) that.draw();
-           });
-         });
-       }
-     });  // End of DT initialization
-
-     // Disable search on key up and implement enter
-     $('#data_filter input').unbind();
-     $('#data_filter input').bind('keyup', function(e) {
-       //var that = $('#data').DataTable();
-       var that = $('#data').DataTable();
-       if (that.search() !== this.value) that.search(this.value);
-       // if serverside draw() only on enter
-       if (e.keyCode == 13 ) that.draw();
-     });
-     
-     //-- Source --
-     // https://datatables.net/forums/discussion/comment/135104/#Comment_135104
-     table.on('select.dt deselect.dt', function(e) {
-       var nRows = table.rows().count();
-       var nSelected = table.rows(".selected").count();
-       if (nSelected === nRows) {
-         $("#head-row").addClass("selected");
-       } else {
-         $("#head-row").removeClass("selected");
-       }
-     });
-     table.on('draw.dt', function() {
-       if ($("#head-row").hasClass("selected")) {
-         table.rows().select();
-       }
-     });
-     $('#select_all').on('click', function() {
-       $("#head-row").toggleClass("selected");
-       if ($("#head-row").hasClass("selected")) {
-         table.rows().select();
-       } else {
-         table.rows().deselect();
-       }
-     });
-
-     //-- row details control ---
-     // Add event listener for opening and closing details.
-     // Skip if this is from 'select-checkbox'.
-     $('#data tbody').on('click', 'tr', function (e) {
-       var source = $(e.target);       // who triggered the event
-       if (source.hasClass('select-checkbox')) {
-         return;
-       }
-       
-       var tr = $(this);
-       // Check if this is not from 'checkbox'
-       var row = table.row(tr);
-       
-       // note that data is already there to be used
-       // so that it is *not* necessary to qury agian.
-       // 
-       if ( row.child.isShown() ) {
-         // This row is already open - close it
-         row.child.hide();
-         tr.removeClass('details');  // any class name to tell its status
-       }
-       else {
-         // Open this row
-         row.child( format(row.data()) ).show();
-         tr.addClass('details');
-       }
-     } );
-     
-     // Add listener for vcalue change event on 'load' select
-     $("#load-message").on("change", function() {
-       var that = $('#data').DataTable();
-       that.draw();
-     } );
+ //function collapseAll(e, dt, node, config ) {
+ //  dt.rows( ".details" ).api().each( function() {
+ //    $(this).click();
+ //  });
+ //}
+ 
+ $(document).ready(function () {
+   // Setup - add a text input to each footer cell
+   $('#data tfoot th').each( function () {
+     if ($(this).attr('class') != 'unsearchable') {
+       var title = $(this).text();
+       $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+     }
    } );
-  </script>
+
+   // Reduce number of page numbers shown in pagination
+   $.fn.DataTable.ext.pager.numbers_length = 4;
+   
+   let table = $('#data').DataTable({
+     serverSide: true,
+     ajax: {
+       url: '/api/data',
+       type: 'POST',
+       data: function(data) {
+         // read values from my custom search elements
+         data.unread = $('#load-message').val() == "unread";
+         return JSON.stringify(data);
+         //return JSON.stringify({'filter': data}); // NOT WORKS
+       }
+     },
+     deferRender: true,
+     columns: [
+       {data: null, defaultContent: '',
+        className: 'select-checkbox',
+        orderable: false, searchable: false},
+       {data: 'id', visible: false, searchable: false},
+       {data: 'name'},
+       {data: 'age', width: "20px"},
+       {data: 'address', orderable: false},
+       {data: 'phone', orderable: false, width: "100px"},
+       {data: 'email'}
+     ],
+     search: {return: true},
+     select: {style: 'multi+shift', selector: 'td:first-child'},
+     order: [[ 1, 'asc' ]],  /** NOTE: match to ID of default column **/
+
+     //dom: '<"ctrl-bar"Blfip>rt',
+     //dom: '<"ctrl-bar"<"ctrl-btns grid-item"B><"ctrl-pager grid-item"lp><"ctrl-filter grid-item"f>>rt',
+     dom: '<"ctrl-bar"<"ctrl-btns grid-item"B><"ctrl-filter grid-item"f><"ctrl-pager grid-item"lp>>rt',
+     //pagingType: 'full_numbers',
+     pagingType: 'input',
+     language: {
+       paginate: {
+         first:    '<img class="customBtn" src="{{ url_for('static', filename='double-arrow-left-14215-32.png') }}">',
+         previous: '<img class="customBtn" src="{{ url_for('static', filename='left-arrow-6404-32.png') }}">',
+         next:     '<img class="customBtn" src="{{ url_for('static', filename='right-arrow-6405-32.png') }}">',
+         last:     '<img class="customBtn" src="{{ url_for('static', filename='double-arrow-right-14214-32.png') }}">',
+       }
+     },
+     buttons: [
+       {
+         tag: 'img',
+         //attr: { src: "{{ url_for('static', filename='north-arrow-235-32.png') }}" },
+         attr: { src: "{{ url_for('static', filename='double-arrow-up-14217-32.png') }}" },
+         className: 'customBtn',  // size, border, ...
+         titleAttr: 'Collapse all open rows',    // tooltip
+         action: function(e, dt, node, config) {
+           dt.rows( ".details" ).nodes().to$().click();
+         }
+       },
+       {
+         tag: 'img',
+         // Icon by <a href='https://iconpacks.net/?utm_source=link-attribution&utm_content=13197'>Iconpacks</a>
+         //attr: { src: "{{ url_for('static', filename='checklist-13197-32.png') }}" },
+         //attr: { src: "{{ url_for('static', filename='check-4790-32.png') }}" },
+         attr: { src: "{{ url_for('static', filename='checklist-13200-32.png') }}" },
+         className: 'customBtn customBtn-full',
+         titleAttr: 'Mark selected entries to read',
+         action: function(e, dt, node, config) {
+           // collect entry ids of selected rows
+           let key = 'id';   // or 'DT_RowID'
+           let selected = dt.rows('.selected')
+                            .data()
+                            .to$()
+                            .map(function() {return this[key];})
+                            .get();
+
+           // ask server to process these selected rows
+           $.ajax({
+             url: "{{ url_for('make_older') }}",
+             method: "POST",
+             dataType: "json",   // FROM the server !!!
+             contentType: 'application/json',
+             data: JSON.stringify({'selected':selected}),
+             //-- GET --
+             //data: {'selected': selected },
+             //traditional: true
+           })
+            .done(function( msg ) {
+              alert( "They are 1 year older now: " + JSON.stringify(msg) );
+            });
+         }
+       },
+       {
+         tag: 'img',
+         attr: { src: "{{ url_for('static', filename='checklist-13196-32.png') }}" },
+         className: 'customBtn customBtn-full',
+         titleAttr: 'Mark all unread entries to read',
+         action: function(e, dt, node, config) {
+           $.ajax({
+             url: "{{ url_for('make_older') }}",
+             method: "POST",
+             dataType: "json",   // FROM the server !!!
+             contentType: 'application/json',
+             data: JSON.stringify({'selected':['all']}),
+           })
+            .done(function( msg ) {
+              alert( "Everybody feels 1 year older now: " + JSON.stringify(msg) );
+            });
+         }
+       },
+       {
+         tag: 'img',
+         attr: { src: "{{ url_for('static', filename='reset-14414-32.png') }}" },
+         className: 'customBtn',
+         titleAttr: 'Reload current page',
+         action: function(e, dt, node, config) {
+           dt.ajax.reload();
+           //dt.ajax.reload(null, false);  // keep current page number
+         }
+       },
+       { /* just a placeholder for custom filter element */
+         text: "<select id='load-message'><option value='all'>All</option><option value='unread'>Unread</option></select>",
+         titleAttr: 'Filter messages based on reading state',
+         //action: ** it is only for 'click' event so
+         //           real action will be defined later
+         //           for 'change' event **
+       }
+     ],
+     
+     // for individual seach
+     initComplete: function() {
+       var api = this.api();
+       api.columns().every(function() {
+         var that = this;
+         $('input', this.footer()).on('keyup change', function(e) {
+           if (that.search() !== this.value) {
+             that.search(this.value);
+           }
+           if (e.keyCode == 13) that.draw();
+         });
+       });
+     }
+   });  // End of DT initialization
+   
+   // Disable search on key up and implement enter
+   $('#data_filter input').unbind();
+   $('#data_filter input').bind('keyup', function(e) {
+     //var that = $('#data').DataTable();
+     var that = $('#data').DataTable();
+     if (that.search() !== this.value) that.search(this.value);
+     // if serverside draw() only on enter
+     if (e.keyCode == 13 ) that.draw();
+   });
+   
+   //-- Source --
+   // https://datatables.net/forums/discussion/comment/135104/#Comment_135104
+   table.on('select.dt deselect.dt', function(e) {
+     var nRows = table.rows().count();
+     var nSelected = table.rows(".selected").count();
+     if (nSelected === nRows) {
+       $("#head-row").addClass("selected");
+     } else {
+       $("#head-row").removeClass("selected");
+     }
+   });
+   table.on('draw.dt', function() {
+     if ($("#head-row").hasClass("selected")) {
+       table.rows().select();
+     }
+   });
+   $('#select_all').on('click', function() {
+     $("#head-row").toggleClass("selected");
+     if ($("#head-row").hasClass("selected")) {
+       table.rows().select();
+     } else {
+       table.rows().deselect();
+     }
+   });
+   
+   //-- row details control ---
+   // Add event listener for opening and closing details.
+   // Skip if this is from 'select-checkbox'.
+   $('#data tbody').on('click', 'tr', function (e) {
+     var source = $(e.target);       // who triggered the event
+     if (source.hasClass('select-checkbox')) {
+       return;
+     }
+     
+     var tr = $(this);
+     // Check if this is not from 'checkbox'
+     var row = table.row(tr);
+     
+     // note that data is already there to be used
+     // so that it is *not* necessary to qury agian.
+     // 
+     if ( row.child.isShown() ) {
+       // This row is already open - close it
+       row.child.hide();
+       tr.removeClass('details');  // any class name to tell its status
+     }
+     else {
+       // Open this row
+       row.child( format(row.data()) ).show();
+       tr.addClass('details');
+     }
+   } );
+   
+   // Add listener for vcalue change event on 'load' select
+   $("#load-message").on("change", function() {
+     var that = $('#data').DataTable();
+     that.draw();
+   } );
+ } );
+</script>
 {% endblock %}
