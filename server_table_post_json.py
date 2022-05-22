@@ -42,15 +42,9 @@ def index():
 def data():
     query = User.query
 
-    # hmm... whole json data is a key of a
-    #        'single' element ImmutableMultiDict
-    #        so it's not possible to know the key
-    #
-    #  form = { 'data_as_a_key': '' }
-    #
-    data, = list(request.form.keys()) # get the key, and
-    data = json.loads(data)           # convert it to dict
-
+    # 'request.get_json()' is the right call for 'application/json' contentType
+    data = request.get_json()
+    
     # search filter
     search = data['search']['value']
     if search:
