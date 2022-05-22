@@ -59,6 +59,7 @@
     </style>
 
     <style>
+     /*
      .crtl-bar {
        display: grid;
        grid-template-columns: 20%, 40%, 40%;
@@ -70,6 +71,7 @@
      .grid-item {
        text-align: center;
       }
+     */
      
      .customBtn {
        /* width: 16px; */
@@ -79,6 +81,11 @@
        border-radius: 4px;
      }
 
+     div.unread {
+       margin-left: 2px;
+       margin-rigt: 2px;
+     }
+     
      .ctrl-bar .dt-buttons button.dt-button { /* container of #load-message */
        border: none;
        background: none;
@@ -94,6 +101,75 @@
 
      input .paginate_input {
        width: 50px;
+     }
+    </style>
+
+    <style>
+
+     .dataTables_wrapper table#data {
+       clear: both;
+     }
+
+     /*
+        ctrl-bar {
+        display: flex;
+        height: 30px;
+        width: 100%;
+        align-items: center;
+        background-color: teal;
+        border: 2px solid;
+        clear: both;
+        }
+      */
+
+     .ctrl-bar {
+       display: flex;
+       height: 30px;
+       width: 100%;
+       margin-bottom: 10px;
+       justify-content: space-between;
+       align-items: center;
+       clear: both;
+     }
+
+     #data_paginate {
+       float: right;
+       padding: 0;
+       margin: 0;
+     }
+
+     #data_filter {
+       display:right;
+       margin-left: 5px;
+     }
+     #data_filter input {
+       width: 150px;
+       height: 24px;
+     }
+
+     #data_length {
+       float: left;
+       margin-left: 5px;
+     }
+     #data_length select {
+       height: 25px;
+     }
+
+
+     /* border around header row cells by 'kthorgren' */
+     th {
+       border-top: 1px solid #dddddd;
+       border-bottom: 1px solid #dddddd;
+       border-right: 1px solid #dddddd;
+     }
+     
+     th:first-child {
+       border-left: 1px solid #dddddd;
+     }
+
+     body > .container {
+       margin-left: 0;
+       margin-right: 0;
      }
     </style>
   </head>

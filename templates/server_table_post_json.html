@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-<table id="data" class="display cell-border compact">
+<div class="table-container">
+<table id="data" class="display nowrap cell-border compact">
   <thead>
     <tr id="head-row">
       <th class="select-checkbox" id="select_all"></th>
@@ -27,6 +28,7 @@
     </tr>
   </tfoot>
 </table>
+</div>
 {% endblock %}
 
 {% block scripts %}
@@ -67,9 +69,10 @@
    } );
 
    // Reduce number of page numbers shown in pagination
-   $.fn.DataTable.ext.pager.numbers_length = 4;
+   //$.fn.DataTable.ext.pager.numbers_length = 4;
    
    let table = $('#data').DataTable({
+     progressing: true,
      serverSide: true,
      ajax: {
        url: '/api/data',
@@ -87,19 +90,22 @@
         className: 'select-checkbox',
         orderable: false, searchable: false},
        {data: 'id', visible: false, searchable: false},
-       {data: 'name'},
+       {data: 'name', width: '15%'},
        {data: 'age', width: "20px"},
        {data: 'address', orderable: false},
-       {data: 'phone', orderable: false, width: "100px"},
-       {data: 'email'}
+       {data: 'phone', orderable: false, width: "15%"},
+       {data: 'email', width: '15%'}
+     ],
+     columnDefs: [
+       {targets: '_all', className: 'dt-head-center'},
      ],
      search: {return: true},
+     autowidth: false,
      select: {style: 'multi+shift', selector: 'td:first-child'},
      order: [[ 1, 'asc' ]],  /** NOTE: match to ID of default column **/
 
      //dom: '<"ctrl-bar"Blfip>rt',
-     //dom: '<"ctrl-bar"<"ctrl-btns grid-item"B><"ctrl-pager grid-item"lp><"ctrl-filter grid-item"f>>rt',
-     dom: '<"ctrl-bar"<"ctrl-btns grid-item"B><"ctrl-filter grid-item"f><"ctrl-pager grid-item"lp>>rt',
+     dom: '<"ctrl-bar"<"buttons"B<"unread dt-buttons">>flp>rt',   // elisa style
      //pagingType: 'full_numbers',
      pagingType: 'input',
      language: {
@@ -127,7 +133,7 @@
          //attr: { src: "{{ url_for('static', filename='checklist-13197-32.png') }}" },
          //attr: { src: "{{ url_for('static', filename='check-4790-32.png') }}" },
          attr: { src: "{{ url_for('static', filename='checklist-13200-32.png') }}" },
-         className: 'customBtn customBtn-full',
+         className: 'customBtn',
          titleAttr: 'Mark selected entries to read',
          action: function(e, dt, node, config) {
            // collect entry ids of selected rows
@@ -157,7 +163,7 @@
        {
          tag: 'img',
          attr: { src: "{{ url_for('static', filename='checklist-13196-32.png') }}" },
-         className: 'customBtn customBtn-full',
+         className: 'customBtn',
          titleAttr: 'Mark all unread entries to read',
          action: function(e, dt, node, config) {
            $.ajax({
@@ -182,13 +188,16 @@
            //dt.ajax.reload(null, false);  // keep current page number
          }
        },
-       { /* just a placeholder for custom filter element */
-         text: "<select id='load-message'><option value='all'>All</option><option value='unread'>Unread</option></select>",
-         titleAttr: 'Filter messages based on reading state',
-         //action: ** it is only for 'click' event so
-         //           real action will be defined later
-         //           for 'change' event **
-       }
+       //-- Load 'All' or 'Unread' eLogs --//
+       //{ /* just a placeholder for custom filter element */
+       //  //tag: "select",
+       //  text: "<select id='load-message'><option value='all'>All</option><option value='unread'>Unread</option></select>",
+       //  className: 'loadBtn',
+       //  titleAttr: 'Filter messages based on reading state',
+       //  //action: ** it is only for 'click' event so
+       //  //           real action will be defined later
+       //  //           for 'change' event **
+       //}
      ],
      
      // for individual seach
@@ -205,6 +214,10 @@
        });
      }
    });  // End of DT initialization
+
+   // Add selector for loading unread messages
+   $("div.unread").html("<select id='load-message'><option value='all'>All</option><option value='unread'>Unread</option></select>");
+
    
    // Disable search on key up and implement enter
    $('#data_filter input').unbind();
@@ -273,6 +286,14 @@
    $("#load-message").on("change", function() {
      var that = $('#data').DataTable();
      that.draw();
+   } );
+
+   // ELisA : 'jsp/viewList.jsp'
+   $(window).resize( function () {
+     //get only the visible dataTable that got initialised
+     //$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+     console.log('resizing');
+     table.columns.adjust();
    } );
  } );
 </script>
